@@ -27,6 +27,19 @@ st.title("📞 Telco Customer Churn Prediction")
 st.write("Enter customer details to compare predictions from two models.")
 
 # ============================================
+# Sidebar - Model Performance
+# ============================================
+st.sidebar.header("📊 Model Performance")
+st.sidebar.markdown("""
+| Model | F1 | AUC |
+|---|---|---|
+| Logistic Regression | 0.588 | 0.717 |
+| Random Forest | 0.581 | 0.712 |
+""")
+st.sidebar.caption("Logistic Regression has slightly higher performance → used for final decision.")
+st.sidebar.markdown("---")
+
+# ============================================
 # Sidebar - Inputs
 # ============================================
 st.sidebar.header("Customer Information")
@@ -100,7 +113,7 @@ if st.button("Predict"):
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown("### 🌲 Random Forest ⭐")
+        st.markdown("### 🌲 Random Forest")
         if pred_rf == 1:
             st.error("⚠️ Customer is likely to CHURN")
         else:
@@ -108,20 +121,23 @@ if st.button("Predict"):
         st.metric("Churn Probability", f"{prob_rf:.2%}")
 
     with col2:
-        st.markdown("### 📈 Logistic Regression")
+        st.markdown("### 📈 Logistic Regression ⭐")
         if pred_lr == 1:
             st.error("⚠️ Customer is likely to CHURN")
         else:
             st.success("✅ Customer is likely to STAY")
         st.metric("Churn Probability", f"{prob_lr:.2%}")
 
-    # القرار النهائي
+    # ============================================
+    # القرار النهائي — بناءً على Logistic Regression
+    # ============================================
     st.markdown("---")
-    st.subheader("🎯 Final Decision (Random Forest)")
-    if pred_rf == 1:
-        st.error(f"Customer is likely to **CHURN** — Probability: {prob_rf:.2%}")
+    st.subheader("🎯 Final Decision (Logistic Regression)")
+
+    if pred_lr == 1:
+        st.error(f"Customer is likely to **CHURN** — Probability: {prob_lr:.2%}")
     else:
-        st.success(f"Customer is likely to **STAY** — Probability: {prob_rf:.2%}")
+        st.success(f"Customer is likely to **STAY** — Probability: {prob_lr:.2%}")
 
     if pred_rf != pred_lr:
-        st.caption("ℹ️ Models disagree — final decision follows Random Forest (higher accuracy).")
+        st.caption("ℹ️ Models disagree — final decision follows Logistic Regression (slightly higher F1 & AUC).")
